@@ -1,5 +1,4 @@
 # Vehicle Detection
-[![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
 
 
 The goal of this project is to write a software pipeline to detect vehicles in a video stream obtained from a camera mounted on a car while driving.
@@ -24,22 +23,13 @@ The goals / steps of this project are the following:
 [image6]: ./output_images/labeled_test_images.png
 [video1]: project_video_processed.mp4
 
-## [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
-###Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
 
----
 
-###Writeup / README
+### Writeup / README
 
-####1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  
+### Histogram of Oriented Gradients (HOG)
 
-You're reading it! 
-
-`Note: ` All the code for this project is contained in the Jupyter Notebook - `Vehicle_Detection.ipynb`
-
-###Histogram of Oriented Gradients (HOG)
-
-####1. Explain how (and identify where in your code) you extracted HOG features from the training images.
+#### 1. Explain how (and identify where in your code) you extracted HOG features from the training images.
 
 I started by reading in all the `vehicle` and `non-vehicle` images utilizing the `glob` library in python. I randomly selected 3 images from each category which are shown below. 
 The code for this step is contained in the `second and third code cell` of the Jupyter notebook. 
@@ -55,7 +45,7 @@ The code for this is contained in the `seventh code cell` of the notebook.
 
 
 
-####2. Explain how you settled on your final choice of HOG parameters.
+#### 2. Explain how you settled on your final choice of HOG parameters.
 
 I iterated over several colorspaces without much changes to the different parameters required for `skimage's hog method`. I based my selection eventually on the test set accuracy I achieved
 after training my classifier. This isn't a very robust metric to identify what combination would work the best, but coupled with observing the results of searching and classifying vehicles in the test images, the following parameters yielded
@@ -75,14 +65,14 @@ Here is an example using the `HSV` color space, all channels, and HOG features e
 
 ![alt text][image2]
 
-####3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
+#### 3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
 Once I obtained my training and test set from extracted features, as explained above, I utilized `sklearn's Linear Support Vector Classification (LinearSVC)` to train a classifier.
 This was implemented in the `8th code cell` of the notebook, and I obtained a test accuracy of 99.07%
 
-###Sliding Window Search
+### Sliding Window Search
 
-####1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
+### #1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 
 All of the helper functions for this section are available in the `9th code cell` of the notebook.
 
@@ -111,7 +101,7 @@ The following displays the sliding windows overlayed on a test image.
 
 The next section covers the remaining pipeline for individual images.
 
-####2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to try to minimize false positives and reliably detect cars?
+#### 2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to try to minimize false positives and reliably detect cars?
 
 In `code cell 10` of the notebook, I run my pipeline for individual test images. I initially defined the sliding windows I discuss above. I then call the `search_windows` function which
 was defined in the `9th cell` of the notebook. This function (based off of the functions we covered in the course) identifies windows in the image(s) where the classifier detects a vehicle.
@@ -134,11 +124,11 @@ vehicle using the `draw_labeled_bboxes` function defined in `code cell 9`. Here 
 
 ### Video Implementation
 
-####1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
+#### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
 Here's a [link to my video result](./project_video_result.mp4) named `project_video_result.mp4` [also attached].
 
 
-####2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
+#### 2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
 
 The code for the video pipeline in the `process_video` function in the `11th code cell` of the notebook. 
 
@@ -163,15 +153,12 @@ The results I obtained were better than before as you can see from the video.
 
 ---
 
-###Discussion
+### Discussion
 
-####1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
+#### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-Most of the problems or issues with the implementation was tuning the parameters and finding the right combinations. Furthermore, a more robust solution would not work in real-time.
+Most of the problems or issues with the implementation was tuning the parameters and finding the right combinations.
 
-The results I get aren't perfect, of course.
-* Using global variables is bad programming practice as per me. I next plan to implement a proper class to handle the detection parts.
-* My implementation doesn't generalize well on any other video. Primary improvement area as per me would be the sliding window sizes, or using a DL based approach in it's entirety. 
+The flaws in my project are as follows: 
+* My implementation doesn't generalize well on any other video. 
 * Current implementation can't distinguish between the cars when one eclipses the other. 
-
-I strongly believe a DL approach would be better for this project. Or at the very least, more relevant dataset to help generalize the classification process.
